@@ -1,6 +1,6 @@
-Página pessoal de Gabryel Boeira (Em construção)
+## Página pessoal de Gabryel Boeira (Em construção)
 
-Tema utilizado README
+## Tema utilizado README
 
 # [Start Bootstrap - Creative](https://startbootstrap.com/template-overviews/creative/)
 

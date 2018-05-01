@@ -38,8 +38,8 @@ h6 {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 
-.bg-primary {
-  background-color: #F05F40 !important;
+.bg-primary{
+  background-color: #4169E1 !important;
 }
 
 .bg-dark {
@@ -309,4 +309,10 @@ header.masthead p {
 
 .btn-primary:active, .btn-primary:focus {
   box-shadow: 0 0 0 0.2rem rgba(240, 95, 64, 0.5) !important;
+}
+
+i {   
+    width:100px;
+    text-align:center;
+    vertical-align:middle;
 }

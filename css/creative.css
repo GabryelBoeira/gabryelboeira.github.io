@@ -230,7 +230,7 @@ header.masthead p {
     text-align: center;
     opacity: 0;
     color: #fff;
-    background: rgba(240, 95, 64, 0.9);
+    background: rgba(38, 133, 235, 0.9);
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     transition: all 0.2s;
@@ -269,7 +269,7 @@ header.masthead p {
 }
 
 .text-primary {
-  color: #fff !important;
+  color: #000 !important;
 }
 
 .btn {
@@ -285,8 +285,8 @@ header.masthead p {
 }
 
 .btn-primary {
-  background-color: #F05F40;
-  border-color: #F05F40;
+  background-color: #fff;
+  border-color: #fff;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {

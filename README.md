@@ -1,4 +1,4 @@
-## Página pessoal de Gabryel Boeira (Em construção)
+## Página pessoal Gabryel Boeira
 
 ## Tema utilizado 
 

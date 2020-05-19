@@ -5,7 +5,7 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
     str +=
 
         "<div class='col-sm-4 d-flex p-2 bd-highlight'>"
-        + "  <div class='card text-center'>"
+        + "  <div class='card text-center text-white bg-dark'>"
 
         + "      <div class='card-header'>"
         + repoName
@@ -94,6 +94,3 @@ $(document).ready(function () {
         divRepositoriosDeck.append(str);
     });
 });
-
-
-//<relative-time datetime="2018-07-25T00:10:00Z" title="24 de jul de 2018 21:10 BRT">26 minutes ago</relative-time>

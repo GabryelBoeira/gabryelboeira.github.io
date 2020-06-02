@@ -72,22 +72,20 @@ $(document).ready(function () {
 
         data.forEach(repo => {
 
-
             var update = new Date(repo.updated_at)
             var options = { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" };
             repo.updated_at = update.toLocaleTimeString("pt-BR", options)
 
-            if (i < 10) {
-                if (i % 3 == 0) {
-                    createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
-                    str += "</div>";
-                    str += "</p>";
-                    str += "<div class='row'>";
-                }
-                else {
-                    createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
-                }
+            
+            if (i % 3 === 0) {
+                createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
+                str += "</div>";
+                str += "</p>";
+                str += "<div class='row'>";
             }
+            else {
+                createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
+            }            
             i++
         });
         str += "</div>";

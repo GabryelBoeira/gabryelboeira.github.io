@@ -60,8 +60,6 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
 $(document).ready(function () {
     $.get("https://api.github.com/users/gabryelboeira/repos", function (data) {
 
-        console.log(data);
-
         //Criando os cartoes dos repositorios
         var i = 1;
         str += "<div class='row'>";

@@ -68,7 +68,7 @@ $(document).ready(function () {
             var options = { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" };
             repo.updated_at = update.toLocaleTimeString("pt-BR", options)
 
-            if(i <= 18){
+            if(i <= 21){
                 if (i % 3 === 0) {
                     createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
                     str += "</div>";

@@ -1,5 +1,5 @@
-var divRepositoriosDeck = $("#repoCardDeck");
-var str = "";
+let divRepositoriosDeck = $("#repoCardDeck")
+let str = ""
 
 function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, repoStars, repoWatchers, repoLanguage, repoHomepage) {
     
@@ -14,8 +14,7 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
         + repoDesc
         + "          </p>"
         + "          <small class='text-muted' style='center'>"
-        + "              Linguagem: "
-        + repoLanguage
+        + "              Linguagem: " + repoLanguage
         + "          </small>"
         + "      </div>"
         + "      <div class='card-footer text-muted'>"
@@ -38,8 +37,7 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
         + "          </small>"
         + "          <div>"
         + "              <p style='font-size: 12px'>"
-        + "                  Atualização: "
-        + repoUpdated_at
+        + "                  Atualização: " + repoUpdated_at
         + "              </p>"
         + "          </div>"
         + "          <div>"
@@ -47,41 +45,29 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
         + "          </div>"
         + "      </div>"
         + "  </div>"
-        + "</div>";
+        + "</div>"
 }
-
 
 $(document).ready(function () {
     $.get("https://api.github.com/users/gabryelboeira/repos", function (data) {
 
-        //Criando os cartoes dos repositorios
-        var i = 1;
-        str += "<div class='card-group'>";
-
+        str += "<div class='card-group'>"
         data.sort(function (a, b) {
-            return (a.updated_at < b.updated_at) ? 1 : ((b.updated_at < a.updated_at) ? -1 : 0);
-        });
-
-        data.forEach(repo => {
-
-            var update = new Date(repo.updated_at)
-            var options = { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" };
+            return (a.updated_at < b.updated_at) ? 1 : ((b.updated_at < a.updated_at) ? -1 : 0)
+        })
+    
+        for (let i = 1; i <= 24; i++) {
+            let repo = data[i]
+            let update = new Date(repo.updated_at)
+            let options = { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric" }
             repo.updated_at = update.toLocaleTimeString("pt-BR", options)
+            
+            createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage)
+            
+            if (i % 3 === 0) str += "</div>" + "<div class='card-group'>"
+        }
 
-            if(i <= 21){
-                if (i % 3 === 0) {
-                    createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
-                    str += "</div>";
-                    str += "</p>";
-                    str += "<div class='card-group'>";
-                }
-                else {
-                    createRepoCard(repo.updated_at, repo.name, repo.description, repo.html_url, repo.forks_count, repo.stargazers_count, repo.watchers_count, repo.language, repo.homepage);
-                }
-            }        
-            i++
-        });
-        str += "</div>";
-        divRepositoriosDeck.append(str);
-    });
-});
+        str += "</div>"
+        divRepositoriosDeck.append(str)
+    })
+})

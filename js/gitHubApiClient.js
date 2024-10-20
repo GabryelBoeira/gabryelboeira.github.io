@@ -49,7 +49,7 @@ function createRepoCard(repoUpdated_at, repoName, repoDesc, repoUrl, repoForks, 
 }
 
 $(document).ready(function () {
-    $.get("https://api.github.com/users/gabryelboeira/repos", function (data) {
+    $.get("https://api.github.com/users/gabryelboeira/repos?sort=pushed&direction=desc", function (data) {
 
         str += "<div class='card-group'>"
         data.sort(function (a, b) {

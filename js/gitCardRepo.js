@@ -21,8 +21,8 @@ function injectStyles() {
   style.textContent = `
       .repo-list {
         display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, auto));
       }
       
       .repo-list::-webkit-scrollbar {
@@ -30,20 +30,20 @@ function injectStyles() {
       }
     
       .repo-card {
-          min-width: 10rem;
-          height: 15rem;
-          border-radius: 1rem;
-          overflow: hidden;
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          transition: filter 0.3s, opacity 0.3s;
-          filter: brightness(1);
-          opacity: 1;
-          color: white;
-          text-decoration: none;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-width: auto;
+        height: 100%;
+        border-radius: 1rem;
+        overflow: hidden;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: filter 0.3s, opacity 0.3s;
+        filter: brightness(1);
+        opacity: 1;
+        color: white;
+        text-decoration: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
       .repo-card:hover {
@@ -73,7 +73,7 @@ function injectStyles() {
 
       .repo-description {
           font-size: 0.8125rem;
-          color: rgba(255, 255, 255, 0.6);
+          color: rgba(255, 255, 255, 0.9);
           flex-grow: 1;
           margin: 0; /* Remove all margins */
       }
@@ -116,11 +116,11 @@ function initializeRepoCards() {
   // Background gradients array
   const cardbg = [
     "linear-gradient(135deg, #6d17d9, #9b7cf6, #bb6cf6)",
-    "linear-gradient(135deg, #ef4444, #f59e0b, #efe444)",
-    "linear-gradient(135deg, #0a9faa, #3aaf8f, #5fffaf)",
+    "linear-gradient(135deg, #7cbc9a, #3e7659, #003017)",
+    "linear-gradient(135deg, #fa3419, #f3e1b6, #7cbc9a)",
     "linear-gradient(135deg, #9ED5C5, #BCEAD5, #DEF5E5)",
     "linear-gradient(135deg, #5050cf, #3aafaf, #4fffcf)",
-    "linear-gradient(135deg, #D9EAFD, #BCCCDC, #9AA6B2)",
+    "linear-gradient(135deg, #7cbc9a, #23998e, #1d5e69)",
     "linear-gradient(135deg, #333333, #888888, #CCCCCC)",
   ];
 

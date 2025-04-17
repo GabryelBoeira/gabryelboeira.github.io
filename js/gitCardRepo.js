@@ -59,8 +59,9 @@ function injectStyles() {
       }
 
       .repo-name {
-          font-size: 1.9rem;
+          font-size: 1.5rem;
           font-weight: bold;
+          color: rgba(255, 255, 255, 0.9);
           margin-bottom: 0.5rem;
       }
 
@@ -68,14 +69,14 @@ function injectStyles() {
           font-size: 1.125rem;
           font-weight: lighter;
           color: rgba(255, 255, 255, 0.9);
-          margin: 0; /* Remove all margins */
+          margin: 0; 
       }
 
       .repo-description {
           font-size: 0.8125rem;
           color: rgba(255, 255, 255, 0.9);
           flex-grow: 1;
-          margin: 0; /* Remove all margins */
+          margin: 0; 
       }
 
       .error-card {
@@ -86,10 +87,11 @@ function injectStyles() {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-size: 12px;
       }
       
       .loader {
-          border: 4px solid rgba(255, 255, 255, 0.3);
+          border: 4px solid rgba(26, 8, 8, 0.3);
           border-top: 4px solid white;
           border-radius: 50%;
           width: 24px;
@@ -115,13 +117,13 @@ function initializeRepoCards() {
 
   // Background gradients array
   const cardbg = [
-    "linear-gradient(135deg, #6d17d9, #9b7cf6, #bb6cf6)",
-    "linear-gradient(135deg, #7cbc9a, #3e7659, #003017)",
-    "linear-gradient(135deg, #fa3419, #f3e1b6, #7cbc9a)",
-    "linear-gradient(135deg, #9ED5C5, #BCEAD5, #DEF5E5)",
-    "linear-gradient(135deg, #5050cf, #3aafaf, #4fffcf)",
-    "linear-gradient(135deg, #7cbc9a, #23998e, #1d5e69)",
-    "linear-gradient(135deg, #333333, #888888, #CCCCCC)",
+    "linear-gradient(135deg, #4A148C, #6A1B9A, #9C27B0)", // Roxo profundo
+    "linear-gradient(135deg, #D32F2F, #E57373, #FFCDD2)", // Vermelho vibrante
+    "linear-gradient(135deg, #1976D2, #64B5F6, #BBDEFB)", // Azul clássico
+    "linear-gradient(135deg, #00796B, #4DB6AC, #B2DFDB)", // Verde teal
+    "linear-gradient(135deg, #FF8F00, #FFB300, #FFECB3)", // Amarelo dourado
+    "linear-gradient(135deg, #5D4037, #8D6E63, #D7CCC8)", // Marrom terroso
+    "linear-gradient(135deg, #263238, #607D8B, #CFD8DC)", // Cinza azulado
   ];
 
   fetchTop24Repos()
@@ -142,7 +144,7 @@ function initializeRepoCards() {
               description: repoInfo.description || "No description available.",
             },
             index,
-            cardbg
+            cardbg,
           );
         } else {
           card = createErrorCard(index, cardbg);
@@ -208,7 +210,15 @@ function createRepoCard(repo, index, cardbg) {
 
   const repoDesc = document.createElement("p");
   repoDesc.classList.add("repo-description");
-  repoDesc.textContent = repo.description;
+  repoDesc.classList.add("repo-description");
+
+  const limiteDescricao = 100;
+  if (repo.description.length > limiteDescricao) {
+    repoDesc.textContent =
+      repo.description.substring(0, limiteDescricao) + "...";
+  } else {
+    repoDesc.textContent = repo.description;
+  }
   repoDetails.appendChild(repoDesc);
 
   const repoFooter = document.createElement("div");
@@ -221,10 +231,10 @@ function createRepoCard(repo, index, cardbg) {
   const item2 = document.createElement("div");
   if (repo.archived === true) {
     item2.innerHTML =
-      '<i class="fa fa-check-square"></i> <span>Concluido</span>';
+      '<i class="fa fa-check-square"></i><span>  Concluido</span>';
   } else {
     item2.innerHTML =
-      '<i class="	fa fa-exclamation"></i> <span>Em Andamento</span>';
+      '<i class="fa fa-exclamation"></i><span> Em Andamento</span>';
   }
 
   const item3 = document.createElement("span");

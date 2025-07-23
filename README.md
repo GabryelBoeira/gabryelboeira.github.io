@@ -1,6 +1,6 @@
 ## Página pessoal Gabryel Boeira
 
-## Tema utilizado 
+## Tema utilizado
 
 # [Start Bootstrap - Resume](https://startbootstrap.com/theme/resume/)
 

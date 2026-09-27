@@ -1,294 +1,148 @@
-// apple.js
-document.addEventListener("DOMContentLoaded", () => {
-  injectStyles();
-  initializeLucideIcons();
-  initializeRepoCards();
-});
+document.addEventListener("DOMContentLoaded", function () {
+  var repoList = document.querySelector(".repo-list");
+  if (!repoList) return;
 
-// Error card background
-const errbg = "linear-gradient(135deg, #0c0a0a, #6c090a, #ff352f)";
+  var LANG_COLORS = {
+    Java: "#b07219",
+    Kotlin: "#A97BFF",
+    JavaScript: "#f1e05a",
+    TypeScript: "#3178c6",
+    Python: "#3572A5",
+    Dockerfile: "#384d54",
+    Shell: "#89e051",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
+    "C#": "#178600",
+    Go: "#00ADD8",
+  };
 
-function initializeLucideIcons() {
-  if (typeof lucide !== "undefined") {
-    lucide.createIcons();
-  } else {
-    console.error("Lucide Icons are not loaded. Please check the CDN link.");
-  }
-}
+  var SVG_STAR =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
 
-function injectStyles() {
-  const style = document.createElement("style");
-  style.textContent = `
-      .repo-list {
-        display: grid;
-        gap: 20px;
-        grid-template-columns: repeat(auto-fit, minmax(300px, auto));
-      }
-      
-      .repo-list::-webkit-scrollbar {
-          display: none;
-      }
-    
-      .repo-card {
-        min-width: auto;
-        height: 100%;
-        border-radius: 1rem;
-        overflow: hidden;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: filter 0.3s, opacity 0.3s;
-        filter: brightness(1);
-        opacity: 1;
-        color: white;
-        text-decoration: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  var SVG_FORK =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>';
+
+  fetchRepos()
+    .then(function (repos) {
+      if (!repos.length) {
+        repoList.innerHTML =
+          '<p style="color:var(--text-3);text-align:center">Não foi possível carregar os repositórios.</p>';
+        return;
       }
 
-      .repo-card:hover {
-          filter: brightness(0.8);
-          opacity: 0.9;
-      }
-
-      .repo-header {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: rgba(255, 255, 255, 0.8);
-      }
-
-      .repo-name {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: rgba(255, 255, 255, 0.9);
-          margin-bottom: 0.5rem;
-      }
-
-      .repo-lang {
-          font-size: 1.125rem;
-          font-weight: lighter;
-          color: rgba(255, 255, 255, 0.9);
-          margin: 0; 
-      }
-
-      .repo-description {
-          font-size: 0.8125rem;
-          color: rgba(255, 255, 255, 0.9);
-          flex-grow: 1;
-          margin: 0; 
-      }
-
-      .error-card {
-          background: linear-gradient(135deg, #0c0a0a, #6c090a, #ff352f);
-      }
-
-      .repo-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-      }
-      
-      .loader {
-          border: 4px solid rgba(26, 8, 8, 0.3);
-          border-top: 4px solid white;
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-          margin: auto;
-      }
-
-      @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-      }
-  `;
-  document.head.appendChild(style);
-}
-
-// Initialize repository cards
-function initializeRepoCards() {
-  const repoList = document.querySelector(".repo-list");
-  if (!repoList) {
-    console.error(".repo-list element not found.");
-    return;
-  }
-
-  // Background gradients array
-  const cardbg = [
-    "linear-gradient(135deg, #4A148C, #6A1B9A, #9C27B0)", // Roxo profundo
-    "linear-gradient(135deg, #D32F2F, #E57373, #FFCDD2)", // Vermelho vibrante
-    "linear-gradient(135deg, #1976D2, #64B5F6, #BBDEFB)", // Azul clássico
-    "linear-gradient(135deg, #00796B, #4DB6AC, #B2DFDB)", // Verde teal
-    "linear-gradient(135deg, #FF8F00, #FFB300, #FFECB3)", // Amarelo dourado
-    "linear-gradient(135deg, #5D4037, #8D6E63, #D7CCC8)", // Marrom terroso
-    "linear-gradient(135deg, #263238, #607D8B, #CFD8DC)", // Cinza azulado
-  ];
-
-  fetchTop24Repos()
-    .then((repos) => {
-      repos.forEach((repoInfo, index) => {
-        let card = null;
-        if (repoInfo) {
-          card = createRepoCard(
-            {
-              url: repoInfo.html_url,
-              user: repoInfo.owner.login,
-              repo: repoInfo.name,
-              lang: repoInfo.language || "N/A",
-              updated_at: repoInfo.updated_at,
-              stars: repoInfo.stargazers_count,
-              forks: repoInfo.forks_count,
-              archived: repoInfo.archived,
-              description: repoInfo.description || "No description available.",
-            },
-            index,
-            cardbg,
-          );
-        } else {
-          card = createErrorCard(index, cardbg);
-        }
-        repoList.appendChild(card);
+      repos.forEach(function (repo) {
+        repoList.appendChild(createCard(repo));
       });
     })
-    .catch((error) => {
-      console.warn("error: ", error);
+    .catch(function () {
+      repoList.innerHTML =
+        '<p style="color:var(--text-3);text-align:center">Erro ao carregar repositórios do GitHub.</p>';
     });
-}
 
-async function fetchTop24Repos() {
-  const apiUrl = `https://api.github.com/users/gabryelboeira/repos?sort=pushed&direction=desc&per_page=24`;
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+  function fetchRepos() {
+    return fetch(
+      "https://api.github.com/users/gabryelboeira/repos?sort=pushed&direction=desc&per_page=24"
+    ).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    });
+  }
+
+  function createCard(repo) {
+    var lang = repo.language || "N/A";
+    var langColor = LANG_COLORS[lang] || "#888";
+    var desc = repo.description || "";
+    if (desc.length > 120) desc = desc.substring(0, 120) + "…";
+
+    var now = Date.now();
+    var updated = new Date(repo.updated_at).getTime();
+    var daysAgo = Math.floor((now - updated) / 86400000);
+    var timeLabel = formatTimeAgo(daysAgo);
+    var isRecent = daysAgo <= 30;
+
+    var card = document.createElement("a");
+    card.href = repo.html_url;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+    card.className = "repo-card";
+
+    var accent = document.createElement("div");
+    accent.className = "repo-card-accent";
+    accent.style.background = langColor;
+
+    var body = document.createElement("div");
+    body.className = "repo-card-body";
+
+    var top = document.createElement("div");
+    top.className = "repo-top";
+
+    var name = document.createElement("p");
+    name.className = "repo-name";
+    name.textContent = repo.name;
+    top.appendChild(name);
+
+    if (isRecent) {
+      var badge = document.createElement("span");
+      badge.className = "repo-fresh";
+      badge.textContent = "Recente";
+      top.appendChild(badge);
     }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching repositories:", error);
-    return [];
-  }
-}
 
-function createRepoCard(repo, index, cardbg) {
-  const div = document.createElement("div");
+    var descEl = document.createElement("p");
+    descEl.className = "repo-desc";
+    descEl.textContent = desc || "Sem descrição disponível.";
 
-  const repoCard = document.createElement("a");
-  repoCard.href = repo.url;
-  repoCard.target = "_blank";
-  repoCard.rel = "noopener noreferrer";
-  repoCard.classList.add("repo-card");
-  repoCard.style.background = cardbg[index % cardbg.length];
+    var footer = document.createElement("div");
+    footer.className = "repo-footer";
 
-  const repoHeader = document.createElement("div");
-  repoHeader.classList.add("repo-header");
+    var langEl = document.createElement("span");
+    langEl.className = "repo-lang";
+    langEl.innerHTML =
+      '<span class="lang-dot" style="background:' +
+      langColor +
+      '"></span> ' +
+      lang;
 
-  if (typeof lucide !== "undefined") {
-    const repoIcon = document.createElement("i");
-    repoIcon.setAttribute("data-lucide", "github");
-    repoIcon.classList.add("social-icon");
-    repoHeader.appendChild(repoIcon);
-  } else {
-    console.warn("Lucide Icons not available. Skipping icon.");
-  }
+    var starEl = document.createElement("span");
+    starEl.className = "repo-metric";
+    starEl.innerHTML = SVG_STAR + " " + repo.stargazers_count;
 
-  const repoUser = document.createElement("span");
-  repoUser.textContent = repo.user;
-  repoHeader.appendChild(repoUser);
+    var forkEl = document.createElement("span");
+    forkEl.className = "repo-metric";
+    forkEl.innerHTML = SVG_FORK + " " + repo.forks_count;
 
-  const repoDetails = document.createElement("div");
-  const repoName = document.createElement("h3");
-  repoName.classList.add("repo-name");
-  repoName.textContent = repo.repo;
-  repoDetails.appendChild(repoName);
+    var timeEl = document.createElement("span");
+    timeEl.style.marginLeft = "auto";
+    timeEl.textContent = timeLabel;
 
-  const repoLang = document.createElement("p");
-  repoLang.classList.add("repo-lang");
-  repoLang.textContent = repo.lang;
-  repoDetails.appendChild(repoLang);
+    footer.appendChild(langEl);
+    footer.appendChild(starEl);
+    footer.appendChild(forkEl);
+    footer.appendChild(timeEl);
 
-  const repoDesc = document.createElement("p");
-  repoDesc.classList.add("repo-description");
-  repoDesc.classList.add("repo-description");
+    body.appendChild(top);
+    body.appendChild(descEl);
+    body.appendChild(footer);
 
-  const limiteDescricao = 100;
-  if (repo.description.length > limiteDescricao) {
-    repoDesc.textContent =
-      repo.description.substring(0, limiteDescricao) + "...";
-  } else {
-    repoDesc.textContent = repo.description;
-  }
-  repoDetails.appendChild(repoDesc);
+    card.appendChild(accent);
+    card.appendChild(body);
 
-  const repoFooter = document.createElement("div");
-  repoFooter.classList.add("repo-footer");
-
-  const item1 = document.createElement("div");
-  item1.innerHTML =
-    '<i class="fa fa-star"></i><span> ' + repo.stars + "</span>";
-
-  const item2 = document.createElement("div");
-  if (repo.archived === true) {
-    item2.innerHTML =
-      '<i class="fa fa-check-square"></i><span>  Concluido</span>';
-  } else {
-    item2.innerHTML =
-      '<i class="fa fa-exclamation"></i><span> Em Andamento</span>';
+    return card;
   }
 
-  const item3 = document.createElement("span");
-  let date = new Date(repo.updated_at);
-  let newdate =
-    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-  item3.textContent = "Atualização: " + newdate;
-
-  repoFooter.appendChild(item1);
-  repoFooter.appendChild(item2);
-  repoFooter.appendChild(item3);
-
-  repoCard.appendChild(repoHeader);
-  repoCard.appendChild(repoDetails);
-  repoCard.appendChild(repoFooter);
-
-  if (typeof lucide !== "undefined") {
-    lucide.createIcons();
+  function formatTimeAgo(days) {
+    if (days === 0) return "hoje";
+    if (days === 1) return "ontem";
+    if (days < 7) return "há " + days + " dias";
+    if (days < 30) {
+      var weeks = Math.floor(days / 7);
+      return "há " + weeks + (weeks === 1 ? " semana" : " semanas");
+    }
+    if (days < 365) {
+      var months = Math.floor(days / 30);
+      return "há " + months + (months === 1 ? " mês" : " meses");
+    }
+    var years = Math.floor(days / 365);
+    return "há " + years + (years === 1 ? " ano" : " anos");
   }
-  div.appendChild(repoCard);
-  return div;
-}
-
-// Create an error card when repository data cannot be fetched
-function createErrorCard(index, cardbg, container) {
-  const errorCard = document.createElement("div");
-  errorCard.classList.add("repo-card", "error-card");
-  errorCard.style.background = errbg;
-
-  const errorHeader = document.createElement("div");
-  errorHeader.classList.add("repo-header");
-
-  if (typeof lucide !== "undefined") {
-    const errorIcon = document.createElement("i");
-    errorIcon.setAttribute("data-lucide", "alert-triangle");
-    errorIcon.classList.add("social-icon");
-    errorHeader.appendChild(errorIcon);
-  } else {
-    console.warn("Lucide Icons not available. Skipping error icon.");
-  }
-
-  const errorTitle = document.createElement("span");
-  errorTitle.textContent = "Error";
-  errorHeader.appendChild(errorTitle);
-
-  const errorDetails = document.createElement("div");
-
-  const errorMsg = document.createElement("p");
-  errorMsg.classList.add("repo-description");
-  errorMsg.textContent = "Failed to retrieve repository information.";
-  errorDetails.appendChild(errorMsg);
-
-  errorCard.appendChild(errorHeader);
-  errorCard.appendChild(errorDetails);
-
-  return errorCard;
-}
+});
